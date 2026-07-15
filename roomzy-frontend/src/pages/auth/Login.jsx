@@ -37,6 +37,12 @@ export default function Login() {
       
       {error && <div className="mb-4 text-sm text-red-600 bg-red-50 p-3 rounded">{error.data?.message || 'Login failed'}</div>}
 
+      <div className="mb-6 p-4 bg-blue-50 text-blue-800 rounded-md border border-blue-200 text-sm">
+        <p className="font-semibold mb-1">Demo Credentials (Evaluators):</p>
+        <p>Email: <span className="font-mono font-medium">test@gmail.com</span></p>
+        <p>Password: <span className="font-mono font-medium">test1234</span></p>
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700">Email</label>
