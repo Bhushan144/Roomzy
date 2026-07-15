@@ -11,7 +11,7 @@ export class ListingService {
     const data = {
       ...listingData,
       ownerId,
-      status: 'DRAFT'
+      status: 'PUBLISHED'
     };
     return await repository.createListing(data);
   }

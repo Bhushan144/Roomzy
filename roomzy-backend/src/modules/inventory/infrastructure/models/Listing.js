@@ -50,7 +50,7 @@ const listingSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ['DRAFT', 'PUBLISHED', 'FILLED', 'ARCHIVED'],
-    default: 'DRAFT',
+    default: 'PUBLISHED',
     index: true
   }
 }, { timestamps: true });
