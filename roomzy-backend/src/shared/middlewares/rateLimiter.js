@@ -16,7 +16,7 @@ export const apiLimiter = rateLimit({
 // 2. Strict Auth Limiter (5 requests per 15 minutes in prod, 100 in dev)
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: config.NODE_ENV === 'development' ? 100 : 5,
+  max: config.NODE_ENV === 'development' ? 100 : 20,
   message: {
     status: 'error',
     message: 'Too many login/registration attempts, please try again later'
