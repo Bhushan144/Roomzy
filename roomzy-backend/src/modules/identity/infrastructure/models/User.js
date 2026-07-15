@@ -16,10 +16,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['TENANT', 'OWNER', 'ADMIN'],
     required: true
-  },
-  isEmailVerified: {
-    type: Boolean,
-    default: false
   }
 }, { timestamps: true });
 

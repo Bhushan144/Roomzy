@@ -14,11 +14,6 @@ const registerSchema = z.object({
   role: z.enum(['TENANT', 'OWNER'])
 });
 
-const verifyOtpSchema = z.object({
-  email: z.string().email(),
-  otp: z.string().length(6)
-});
-
 const loginSchema = z.object({
   email: z.string().email(),
   password: z.string()
@@ -33,16 +28,6 @@ export const register = async (req, res, next) => {
       validatedData.role
     );
     res.status(201).json({ status: 'success', data: result });
-  } catch (error) {
-    next(error);
-  }
-};
-
-export const verifyOtp = async (req, res, next) => {
-  try {
-    const validatedData = verifyOtpSchema.parse(req.body);
-    const result = await authService.verifyOtp(validatedData.email, validatedData.otp);
-    res.status(200).json({ status: 'success', data: result });
   } catch (error) {
     next(error);
   }

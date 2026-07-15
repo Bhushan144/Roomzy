@@ -16,19 +16,11 @@ export const authApi = apiSlice.injectEndpoints({
         body: userData,
       }),
     }),
-    verifyOtp: builder.mutation({
-      query: (otpData) => ({
-        url: '/identity/verify-otp',
-        method: 'POST',
-        body: otpData,
-      }),
-    }),
   }),
 });
 
 // RTK Query automatically generates React hooks for each endpoint!
 export const { 
   useLoginMutation, 
-  useRegisterMutation, 
-  useVerifyOtpMutation 
+  useRegisterMutation 
 } = authApi;

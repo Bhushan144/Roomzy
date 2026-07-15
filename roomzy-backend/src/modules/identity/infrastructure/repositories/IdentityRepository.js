@@ -1,6 +1,5 @@
 import { User } from '../models/User.js';
 import { FlatmateProfile } from '../models/FlatmateProfile.js';
-import { OtpRecord } from '../models/OtpRecord.js';
 
 export class IdentityRepository {
   // User Methods
@@ -11,26 +10,6 @@ export class IdentityRepository {
 
   async findUserByEmail(email) {
     return await User.findOne({ email });
-  }
-
-  async markEmailVerified(userId) {
-    return await User.findByIdAndUpdate(userId, { isEmailVerified: true }, { new: true });
-  }
-
-  // OTP Methods
-  async saveOtp(email, otpHash) {
-    // Delete any existing OTP for this email to prevent spam
-    await OtpRecord.deleteMany({ email });
-    const record = new OtpRecord({ email, otp: otpHash });
-    return await record.save();
-  }
-
-  async findOtpRecord(email) {
-    return await OtpRecord.findOne({ email });
-  }
-
-  async deleteOtpRecord(email) {
-    return await OtpRecord.deleteMany({ email });
   }
 
   // Profile Methods

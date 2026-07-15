@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 import { config } from '../../../shared/config/env.config.js';
 import { AppError } from '../../../shared/errors/AppError.js';
 import { IdentityRepository } from '../infrastructure/repositories/IdentityRepository.js';
-import { rabbitMQ } from '../../../shared/infrastructure/queue/rabbitmq.js';
 
 const repository = new IdentityRepository();
 
@@ -24,59 +23,22 @@ export class AuthService {
       role
     });
 
-    // Generate 6-digit OTP
-    const rawOtp = Math.floor(100000 + Math.random() * 900000).toString();
-    const otpHash = await bcrypt.hash(rawOtp, 10);
-    
-    await repository.saveOtp(email, otpHash);
-
-    // In production, send OTP via email through the notification queue
-    if (config.NODE_ENV === 'production') {
-      const channel = rabbitMQ.getChannel();
-      channel.sendToQueue(
-        rabbitMQ.NOTIFICATION_QUEUE,
-        Buffer.from(JSON.stringify({ type: 'SEND_OTP', email, otp: rawOtp })),
-        { persistent: true }
-      );
-    }
+    // Auto-login: return JWT token directly after registration
+    const payload = { id: newUser._id, role: newUser.role };
+    const token = jwt.sign(payload, config.JWT_SECRET, { expiresIn: '7d' });
 
     return { 
+      token,
       userId: newUser._id, 
-      message: 'Registration successful. Please verify OTP.',
-      ...(config.NODE_ENV !== 'production' && { dev_otp: rawOtp })
+      role: newUser.role,
+      message: 'Registration successful.'
     };
-  }
-
-  async verifyOtp(email, providedOtp) {
-    const record = await repository.findOtpRecord(email);
-    if (!record) {
-      throw new AppError('OTP expired or invalid', 400);
-    }
-
-    const isValid = await bcrypt.compare(providedOtp, record.otp);
-    if (!isValid) {
-      throw new AppError('Invalid OTP', 400);
-    }
-
-    const user = await repository.findUserByEmail(email);
-    if (!user) {
-      throw new AppError('User not found', 404);
-    }
-
-    await repository.markEmailVerified(user._id);
-    await repository.deleteOtpRecord(email);
-
-    return { message: 'Email verified successfully' };
   }
 
   async login(email, password) {
     const user = await repository.findUserByEmail(email);
     if (!user) {
       throw new AppError('Invalid credentials', 401);
-    }
-
-    if (!user.isEmailVerified) {
-      throw new AppError('Please verify your email before logging in', 403);
     }
 
     const isMatch = await bcrypt.compare(password, user.passwordHash);
