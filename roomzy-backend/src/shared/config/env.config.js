@@ -13,8 +13,8 @@ const envSchema = z.object({
   MONGO_URI: z.string().startsWith('mongodb', "MONGO_URI must be a valid mongodb connection string"),
   RABBITMQ_URI: z.string().startsWith('amqp', "RABBITMQ_URI must start with amqp").optional(), 
   
-  SMTP_USER: z.string().email("SMTP_USER must be a valid email").optional(),
-  SMTP_PASS: z.string().min(1, "SMTP_PASS is required").optional(),
+  RESEND_API_KEY: z.string().min(1, "RESEND_API_KEY is required").optional(),
+  RESEND_FROM_EMAIL: z.string().optional(),
   JWT_SECRET: z.string().min(10, "JWT_SECRET must be at least 10 characters"),
   AI_PROVIDER_KEY: z.string().min(1).optional(),
   

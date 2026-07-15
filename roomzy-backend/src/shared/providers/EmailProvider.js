@@ -1,30 +1,31 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import { config } from '../config/env.config.js';
 import { logger } from '../utils/logger.js';
 
 export class EmailProvider {
   constructor() {
-    this.transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: config.SMTP_USER,
-        pass: config.SMTP_PASS,
-      },
-    });
-    this.defaultFrom = `Roomzy Notifications <${config.SMTP_USER}>`;
+    this.resend = new Resend(config.RESEND_API_KEY);
+    this.defaultFrom = config.RESEND_FROM_EMAIL || 'Roomzy <onboarding@resend.dev>';
   }
 
   async sendEmail({ to, subject, html }) {
     try {
-      const info = await this.transporter.sendMail({
+      const { data, error } = await this.resend.emails.send({
         from: this.defaultFrom,
-        to,
+        to: [to],
         subject,
         html,
       });
-      return info;
+
+      if (error) {
+        logger.error(`Resend API error: ${error.message} (name: ${error.name})`);
+        throw new Error(error.message);
+      }
+
+      logger.info(`Email sent successfully via Resend (id: ${data.id})`);
+      return data;
     } catch (error) {
-      logger.error(`Failed to send email via provider: ${error.message} (code: ${error.code || 'N/A'})`);
+      logger.error(`Failed to send email via provider: ${error.message}`);
       throw error;
     }
   }
