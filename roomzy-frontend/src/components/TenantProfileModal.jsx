@@ -89,7 +89,9 @@ export default function TenantProfileModal({ isOpen, onClose, tenant, onEvaluate
                         <span className="text-3xl mr-2">💰</span>
                         <div>
                           <p className="text-xs text-gray-500">Target Budget Range</p>
-                          <p className="font-semibold text-lg">₹{tenant.budget.min} - ₹{tenant.budget.max} <span className="text-sm font-normal text-gray-500">/mo</span></p>
+                          <p className="font-semibold text-lg">
+                            {tenant.budget ? `₹${tenant.budget.min} - ₹${tenant.budget.max}` : 'Not specified'} <span className="text-sm font-normal text-gray-500">/mo</span>
+                          </p>
                         </div>
                       </div>
                     </div>

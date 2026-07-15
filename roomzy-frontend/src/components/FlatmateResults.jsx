@@ -132,7 +132,9 @@ export default function FlatmateResults({ onEvaluate }) {
                                         <h4 className="font-semibold text-gray-900 truncate">
                                             {profile.fullName || profile.userId?.email?.split('@')[0]}
                                         </h4>
-                                        <p className="text-xs text-gray-500">Budget: ₹{profile.budget.min} - ₹{profile.budget.max}</p>
+                                        <p className="text-xs text-gray-500">
+                                          Budget: {profile.budget ? `₹${profile.budget.min} - ₹${profile.budget.max}` : 'Not specified'}
+                                        </p>
                                     </div>
                                 </div>
 
