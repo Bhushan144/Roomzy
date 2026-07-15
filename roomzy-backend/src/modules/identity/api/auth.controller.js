@@ -76,10 +76,8 @@ export const upsertProfile = async (req, res, next) => {
 export const getProfile = async (req, res, next) => {
   try {
     const profile = await identityRepo.getFlatmateProfile(req.user.id);
-    if (!profile) {
-      return res.status(404).json({ status: 'fail', message: 'Profile not found' });
-    }
-    res.status(200).json({ status: 'success', data: profile });
+    // Return null data instead of 404 — a missing profile is a normal state for new users
+    res.status(200).json({ status: 'success', data: profile || null });
   } catch (error) {
     next(error);
   }
