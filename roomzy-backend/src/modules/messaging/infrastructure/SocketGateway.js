@@ -12,7 +12,7 @@ export class SocketGateway {
   constructor(httpServer) {
     this.io = new Server(httpServer, {
       cors: {
-        origin: config.FRONTEND_URL, // Locked to frontend URL in production
+        origin: [config.FRONTEND_URL, 'https://roomzy4u.vercel.app'],
         methods: ['GET', 'POST']
       }
     });

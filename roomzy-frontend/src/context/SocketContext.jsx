@@ -17,6 +17,11 @@ export const SocketProvider = ({ children }) => {
       // Hardcoded base URL for development to match our API slice
       const newSocket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000', {
         auth: { token },
+        reconnection: true,
+        reconnectionAttempts: 10,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
+        timeout: 20000,
       });
 
       setSocket(newSocket);
