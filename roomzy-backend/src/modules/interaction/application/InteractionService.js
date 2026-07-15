@@ -70,7 +70,8 @@ export class InteractionService {
     }
 
     // Security: Only the intended receiver can accept or decline
-    if (interaction.receiverId.toString() !== receiverId) {
+    const interactionReceiverId = interaction.receiverId._id ? interaction.receiverId._id.toString() : interaction.receiverId.toString();
+    if (interactionReceiverId !== receiverId) {
       throw new AppError('You are not authorized to respond to this request.', 403);
     }
 
