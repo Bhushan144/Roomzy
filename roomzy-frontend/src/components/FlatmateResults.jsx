@@ -143,12 +143,16 @@ export default function FlatmateResults({ onEvaluate }) {
                                 </p>
 
                                 <div className="flex flex-wrap gap-2 mb-4">
+                                    {profile.lifestyleTraits?.cleanliness && (
                                     <span className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-md border border-blue-100">
                                         {profile.lifestyleTraits.cleanliness.replace('_', ' ')}
                                     </span>
+                                    )}
+                                    {profile.lifestyleTraits?.schedule && (
                                     <span className="px-2 py-1 bg-purple-50 text-purple-700 text-xs rounded-md border border-purple-100">
                                         {profile.lifestyleTraits.schedule.replace('_', ' ')}
                                     </span>
+                                    )}
                                 </div>
 
                                 <div className="mt-auto pt-4 border-t border-gray-100 text-center">
