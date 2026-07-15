@@ -23,6 +23,12 @@ import interactionRoutes from './modules/interaction/api/interaction.routes.js';
 
 const app = express();
 
+// Trust the first proxy (Render, Railway, etc.) so express-rate-limit
+// correctly reads client IPs from the X-Forwarded-For header.
+if (config.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
+
 // 1. Edge Layer Middleware
 app.use(helmet());
 app.use(cors({
@@ -34,6 +40,7 @@ app.use(express.json({ limit: '10kb' })); // Prevent large JSON payload parsing 
 app.use(requestLogger);
 
 app.use('/api', apiLimiter);
+
 
 app.use('/api/identity', identityRoutes);
 app.use('/api/inventory', inventoryRoutes);

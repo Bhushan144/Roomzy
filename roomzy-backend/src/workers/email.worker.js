@@ -35,7 +35,7 @@ const startWorker = async () => {
           channel.ack(msg);
           
         } catch (error) {
-          logger.error('[Email Worker] Notification processing failed', error);
+          logger.error(`[Email Worker] Notification processing failed: ${error.message}`);
           // Negative acknowledge: do not requeue the message to prevent infinite error loops
           // false = do not acknowledge all up to this point, false = do not requeue
           channel.nack(msg, false, false);

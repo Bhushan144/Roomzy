@@ -24,7 +24,7 @@ export class EmailProvider {
       });
       return info;
     } catch (error) {
-      logger.error('Failed to send email via provider', error);
+      logger.error(`Failed to send email via provider: ${error.message} (code: ${error.code || 'N/A'})`);
       throw error;
     }
   }
