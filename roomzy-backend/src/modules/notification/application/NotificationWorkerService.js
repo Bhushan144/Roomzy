@@ -13,7 +13,17 @@ export class NotificationWorkerService {
   async processNotification(payload) {
     const { type, initiatorId, receiverId, targetId } = payload;
 
-    // 1. Fetch recipient and initiator data
+    // Handle SEND_OTP early — it doesn't require initiator/receiver lookups
+    if (type === 'SEND_OTP') {
+      const { email, otp } = payload;
+      const otpSubject = 'Roomzy: Your Verification Code';
+      const otpHtml = `<h2>Your OTP is: <strong>${otp}</strong></h2><p>This code expires in 10 minutes.</p>`;
+      await emailProvider.sendEmail({ to: email, subject: otpSubject, html: otpHtml });
+      logger.info(`Successfully sent OTP email to ${email}`);
+      return;
+    }
+
+    // 1. Fetch recipient and initiator data (required for all other notification types)
     const receiver = await identityRepo.findUserById(receiverId);
     const initiator = await identityRepo.findUserById(initiatorId);
 
@@ -27,14 +37,6 @@ export class NotificationWorkerService {
 
     // 2. Route the notification logic based on type
     switch (type) {
-      case 'SEND_OTP': {
-        const { email, otp } = payload;
-        const otpSubject = 'Roomzy: Your Verification Code';
-        const otpHtml = `<h2>Your OTP is: <strong>${otp}</strong></h2><p>This code expires in 10 minutes.</p>`;
-        await emailProvider.sendEmail({ to: email, subject: otpSubject, html: otpHtml });
-        logger.info(`Successfully sent OTP email to ${email}`);
-        return;
-      }
 
       case 'NEW_ROOM_INTEREST': {
         const listing = await inventoryRepo.findListingById(targetId);
